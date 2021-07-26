@@ -21,7 +21,8 @@
 #![deny(non_camel_case_types)]
 #![deny(non_snake_case)]
 #![deny(unused_mut)]
-
+#![cfg_attr(all(feature = "mesalock_sgx", not(target_env = "sgx")), no_std)] 
+#![cfg_attr(all(target_env = "sgx", target_vendor = "mesalock"), feature(rustc_private))]
 #![cfg_attr(all(not(test), not(feature = "std")), no_std)]
 #[cfg(any(test, feature = "std"))]
 extern crate core;
@@ -1168,4 +1169,4 @@ mod tests {
         assert_eq!(orig.len(), unsafe {strlen(test.as_ptr())});
     }
 }
-
+#[cfg(all(feature = "mesalock_sgx", not(target_env = "sgx")))] #[macro_use] extern crate sgx_tstd as std;
