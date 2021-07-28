@@ -122,6 +122,15 @@
 #![cfg_attr(all(not(test), not(feature = "std")), no_std)]
 #![cfg_attr(all(test, feature = "unstable"), feature(test))]
 
+#![no_std]
+#![cfg_attr(all(feature = "mesalock_sgx", not(target_env = "sgx")), no_std)]
+#![cfg_attr(all(target_env = "sgx", target_vendor = "mesalock"), feature(rustc_private))]
+
+#[cfg(all(feature = "mesalock_sgx", not(target_env = "sgx")))]
+#[macro_use]
+extern crate sgx_tstd as std;
+use std::prelude::v1::*;
+
 #[macro_use]
 pub extern crate secp256k1_sys;
 pub use secp256k1_sys as ffi;
@@ -133,7 +142,7 @@ pub use secp256k1_sys as ffi;
 #[cfg(feature = "serde")] pub extern crate serde;
 #[cfg(all(test, feature = "serde"))] extern crate serde_test;
 #[cfg(any(test, feature = "rand"))] use rand::Rng;
-#[cfg(any(test, feature = "std"))] extern crate core;
+//#[cfg(any(test, feature = "std"))] extern crate core;
 #[cfg(all(test, target_arch = "wasm32"))] extern crate wasm_bindgen_test;
 #[cfg(feature = "alloc")] extern crate alloc;
 
