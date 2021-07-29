@@ -135,16 +135,33 @@ use std::prelude::v1::*;
 pub extern crate secp256k1_sys;
 pub use secp256k1_sys as ffi;
 
-#[cfg(feature = "bitcoin_hashes")] pub extern crate bitcoin_hashes;
-#[cfg(all(test, feature = "unstable"))] extern crate test;
-#[cfg(any(test, feature = "rand"))] pub extern crate rand;
-#[cfg(any(test))] extern crate rand_core;
-#[cfg(feature = "serde")] pub extern crate serde;
-#[cfg(all(test, feature = "serde"))] extern crate serde_test;
-#[cfg(any(test, feature = "rand"))] use rand::Rng;
+#[cfg(feature = "bitcoin_hashes")]
+pub extern crate bitcoin_hashes;
+
+#[cfg(all(test, feature = "unstable"))]
+extern crate test;
+
+#[cfg(any(test, feature = "randx"))]
+pub extern crate rand;
+
+#[cfg(any(test))]
+extern crate rand_core;
+
+#[cfg(feature = "serde")]
+pub extern crate serde;
+
+#[cfg(all(test, feature = "serde"))]
+extern crate serde_test;
+
+#[cfg(any(test, feature = "randx"))]
+use rand::Rng;
 //#[cfg(any(test, feature = "std"))] extern crate core;
-#[cfg(all(test, target_arch = "wasm32"))] extern crate wasm_bindgen_test;
-#[cfg(feature = "alloc")] extern crate alloc;
+
+#[cfg(all(test, target_arch = "wasm32"))]
+extern crate wasm_bindgen_test;
+
+#[cfg(feature = "alloc")]
+extern crate alloc;
 
 use core::{fmt, ptr, str};
 
@@ -654,7 +671,7 @@ impl<C: Context> Secp256k1<C> {
     /// (Re)randomizes the Secp256k1 context for cheap sidechannel resistance;
     /// see comment in libsecp256k1 commit d2275795f by Gregory Maxwell. Requires
     /// compilation with "rand" feature.
-    #[cfg(any(test, feature = "rand"))]
+    #[cfg(any(test, feature = "randx"))]
     pub fn randomize<R: Rng + ?Sized>(&mut self, rng: &mut R) {
         let mut seed = [0; 32];
         rng.fill_bytes(&mut seed);
@@ -788,7 +805,7 @@ impl<C: Signing> Secp256k1<C> {
     /// batch key generation. Requires a signing-capable context. Requires compilation
     /// with the "rand" feature.
     #[inline]
-    #[cfg(any(test, feature = "rand"))]
+    #[cfg(any(test, feature = "randx"))]
     pub fn generate_keypair<R: Rng + ?Sized>(&self, rng: &mut R)
                                     -> (key::SecretKey, key::PublicKey) {
         let sk = key::SecretKey::new(rng);

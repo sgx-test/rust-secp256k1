@@ -2,9 +2,10 @@
 //! Support for Schnorr signatures.
 //!
 
+use std::prelude::v1::*;
 #[cfg(any(test, feature = "rand-std"))]
 use rand::thread_rng;
-#[cfg(any(test, feature = "rand"))]
+#[cfg(any(test, feature = "randx"))]
 use rand::{CryptoRng, Rng};
 
 use super::Error::{InvalidPublicKey, InvalidSecretKey, InvalidSignature};
@@ -193,7 +194,7 @@ impl KeyPair {
 
     /// Creates a new random secret key. Requires compilation with the "rand" feature.
     #[inline]
-    #[cfg(any(test, feature = "rand"))]
+    #[cfg(any(test, feature = "randx"))]
     pub fn new<R: Rng + ?Sized, C: Signing>(secp: &Secp256k1<C>, rng: &mut R) -> KeyPair {
         let mut random_32_bytes = || {
             let mut ret = [0u8; 32];
@@ -509,7 +510,7 @@ impl<C: Signing> Secp256k1<C> {
     /// Create a schnorr signature using the given random number generator to
     /// generate the auxiliary random data. Requires compilation with "rand"
     /// feature.
-    #[cfg(any(test, feature = "rand"))]
+    #[cfg(any(test, feature = "randx"))]
     pub fn schnorrsig_sign_with_rng<R: Rng + CryptoRng>(
         &self,
         msg: &Message,
@@ -550,7 +551,7 @@ impl<C: Signing> Secp256k1<C> {
     /// batch key generation. Requires a signing-capable context. Requires compilation
     /// with the "rand" feature.
     #[inline]
-    #[cfg(any(test, feature = "rand"))]
+    #[cfg(any(test, feature = "randx"))]
     pub fn generate_schnorrsig_keypair<R: Rng + ?Sized>(
         &self,
         rng: &mut R,
